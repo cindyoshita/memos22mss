@@ -21,7 +21,8 @@ const funcoes = {
                 status: observacao.status
             }
         });
-    },    
+    },  
+          
 }
     
 
@@ -41,12 +42,9 @@ app.post('/lembretes/:id/observacoes', async (req, res) => {
     await axios.post('http://localhost:10000/eventos', {
         tipo: "ObservacaoCriada",
         dados: {
-            id: idObs, 
-            texto, 
-            lembreteId: req.params.id,
-            status: 'aguardando'
+            id: idObs, texto, lembreteId: req.params.id
         }
-    })
+})
     res.status(201).send(observacoesDoLembrete);
 });
 
@@ -55,9 +53,13 @@ app.get('/lembretes/:id/observacoes', (req, res) => {
 });
 
 app.post("/eventos", (req, res) => {
-    funcoes[req.body.tipo](req.body.dados);
-    res.status(200).send({ msg: "ok" });
+    try{
+        funcoes[req.body.tipo](req.body.dados);
+     }
+    catch (err){}
+        res.status(200).send({ msg: "ok" });
     });
+    
 
 app.listen(5000, () => {
     console.log('Lembretes. Porta 5000.')

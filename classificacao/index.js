@@ -17,8 +17,10 @@ ObservacaoCriada: (observacao) => {
 },
 };
 app.post("/eventos", (req, res) => {
-    funcoes[req.body.tipo](req.body.dados);
-    res.status(200).send({ msg: "ok" });
- });
+    try {
+        funcoes[req.body.tipo](req.body.dados);
+    } catch (err) {}
+        res.status(200).send({ msg: "ok" });
+    });
 
 app.listen(7000, () => console.log("Classificação. Porta 7000"));
