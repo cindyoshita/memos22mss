@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
+
 app.use(express.json());
 
 const baseConsulta = {};
+
+const axios = require("axios");
 
 const funcoes = {
     LembreteCriado: (lembrete) => {
@@ -33,8 +36,19 @@ app.post("/eventos", (req, res) => {
     try {
         funcoes[req.body.tipo](req.body.dados);
     } catch (err) {}
-        res.status(200).send({ msg: "ok" });
+        res.status(200).send(baseConsulta);
     });
     
 
-app.listen(6000, () => console.log("Consultas. Porta 6000"));
+//não esqueça do async
+app.listen(6000, async () => {
+    console.log("Consultas. Porta 6000");
+    const resp = await
+        axios.get("http://localhost:10000/eventos");
+    //axios entrega os dados na propriedade data
+    resp.data.forEach((valor, indice, colecao) => {
+    try {
+            funcoes[valor.tipo](valor.dados);
+            } catch (err) {}
+        });
+    });
